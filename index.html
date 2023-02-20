@@ -1,0 +1,63 @@
+<html lang=en>
+	<head>
+		<meta charset='utf8'>
+		<script src='nanocanv.js'></script>
+		<script>
+			window.onload = function() {
+				let canvas = new InteractiveCanvas(800, 600);
+				canvas.attach('.container');
+				
+				let mx = 0;
+				let my = 0;
+				canvas.onMove = function(e) {
+					[mx, my] = canvas.mouseToPanned(e.offsetX, e.offsetY);
+				};
+
+				canvas.draw(({w, h}, ctx) => {
+					ctx.clearRect(0, 0, w, h);
+					canvas.panned(() => {
+						ctx.fillStyle = '#666';
+						ctx.beginPath();
+						ctx.arc(0, 0, 16, 0, 3.1415*2);
+						ctx.fill();
+						ctx.closePath();
+
+						ctx.fillStyle = '#f0f0f0';
+						ctx.font = '20pt Serif';
+						const s = 'Hello, world!';
+						ctx.fillText(s, 0, -30);
+
+						const s2 = '今晩は';
+						ctx.fillText(s2, 0, 40);
+
+						ctx.fillStyle = 'red';
+						ctx.fillRect(mx-4, my-4, 8, 8);
+
+						let [dx,dy] = canvas.mouseToPanned(canvas.downX, canvas.downY);
+
+						ctx.fillStyle = 'green';
+						ctx.fillRect(dx-4, dy-4, 8, 8);
+					});
+				});
+				canvas.onDrag = function(e) {
+					this.ox += e.movementX;
+					this.oy += e.movementY;
+				};
+			}
+		</script>
+		<style>
+			body {
+				background-color: #333;
+			}
+			.container {
+				width: 800px;
+				margin: auto;
+			}
+		</style>
+	</head>
+	<body>
+		<div class='container'>
+		</div>
+	</body>
+</html>
+
